@@ -36,7 +36,7 @@
             labelOutputFolder = new Label();
             comboBox1 = new ComboBox();
             labelImageType = new Label();
-            checkBox1 = new CheckBox();
+            checkBoxLongImage = new CheckBox();
             buttonOK = new Button();
             SuspendLayout();
             // 
@@ -96,6 +96,7 @@
             // 
             // comboBox1
             // 
+            comboBox1.Enabled = false;
             comboBox1.FormattingEnabled = true;
             comboBox1.Location = new Point(110, 88);
             comboBox1.Name = "comboBox1";
@@ -111,15 +112,15 @@
             labelImageType.TabIndex = 3;
             labelImageType.Text = "Image Type:";
             // 
-            // checkBox1
+            // checkBoxLongImage
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(110, 128);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(97, 21);
-            checkBox1.TabIndex = 7;
-            checkBox1.Text = "Long Image";
-            checkBox1.UseVisualStyleBackColor = true;
+            checkBoxLongImage.AutoSize = true;
+            checkBoxLongImage.Location = new Point(110, 128);
+            checkBoxLongImage.Name = "checkBoxLongImage";
+            checkBoxLongImage.Size = new Size(97, 21);
+            checkBoxLongImage.TabIndex = 7;
+            checkBoxLongImage.Text = "Long Image";
+            checkBoxLongImage.UseVisualStyleBackColor = true;
             // 
             // buttonOK
             // 
@@ -137,7 +138,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(784, 461);
             Controls.Add(buttonOK);
-            Controls.Add(checkBox1);
+            Controls.Add(checkBoxLongImage);
             Controls.Add(comboBox1);
             Controls.Add(buttonOutputFolder);
             Controls.Add(textBoxOutputFolder);
@@ -148,7 +149,6 @@
             Controls.Add(labelFilePath);
             Name = "MaintForm";
             Text = "MainForm";
-            Load += MaintForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -165,5 +165,6 @@
         private Label labelImageType;
         private CheckBox checkBox1;
         private Button buttonOK;
+        private CheckBox checkBoxLongImage;
     }
 }
