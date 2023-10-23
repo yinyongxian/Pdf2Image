@@ -2,6 +2,7 @@ using System.Drawing.Imaging;
 using Aspose.Pdf;
 using Aspose.Pdf.Annotations;
 using Aspose.Pdf.Devices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Color = System.Drawing.Color;
 using Image = System.Drawing.Image;
 
@@ -49,6 +50,9 @@ namespace Pdf2Image
             }
 
             var longImage = checkBoxLongImage.Checked;
+            int totalHeight = 0;
+            int maxWidth = 0;
+
             var document = new Document(textBoxFilePath.Text);
             
             foreach (var page in document.Pages)
@@ -64,7 +68,12 @@ namespace Pdf2Image
                 pngDevice.Process(page, imageStream);
 
                 //Remove watermark
-                Bitmap bitmap = RemoveWatermark(imageStream);
+                var bitmap = RemoveWatermark(imageStream);
+                if (longImage)
+                {
+                    totalHeight += bitmap.Height;
+                    maxWidth = Math.Max(maxWidth, bitmap.Width);
+                }
 
                 var filename = $"{textBoxOutputFolder.Text}\\page{page.Number}" + ".Png";
                 bitmap.Save(filename, ImageFormat.Png);
@@ -73,6 +82,25 @@ namespace Pdf2Image
                 imageStream.Close();
 
                 File.Delete(tempPath);
+            }
+
+            if (longImage)
+            {
+                using var bitmapLong = new Bitmap(maxWidth, totalHeight);
+                var graphics = Graphics.FromImage(bitmapLong);
+                graphics.FillRectangle(Brushes.White, new System.Drawing.Rectangle(0,0,maxWidth, totalHeight));
+                int currentHeight = 0;
+                foreach (var page in document.Pages)
+                {
+                    var filename = $"{textBoxOutputFolder.Text}\\page{page.Number}" + ".Png";
+                    using var bitmap = new Bitmap(filename);
+                    graphics.DrawImage(bitmap, new System.Drawing.Point(0, currentHeight));
+                    currentHeight += bitmap.Height;
+                }
+
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(textBoxFilePath.Text);
+                var filenameLongImage = $"{textBoxOutputFolder.Text}\\{fileNameWithoutExtension}" + ".Png";
+                bitmapLong.Save(filenameLongImage, ImageFormat.Png);
             }
         }
 
