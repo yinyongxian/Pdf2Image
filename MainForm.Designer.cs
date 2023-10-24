@@ -115,6 +115,8 @@
             // checkBoxLongImage
             // 
             checkBoxLongImage.AutoSize = true;
+            checkBoxLongImage.Checked = true;
+            checkBoxLongImage.CheckState = CheckState.Checked;
             checkBoxLongImage.Location = new Point(110, 128);
             checkBoxLongImage.Name = "checkBoxLongImage";
             checkBoxLongImage.Size = new Size(97, 21);

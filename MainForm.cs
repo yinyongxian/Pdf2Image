@@ -37,14 +37,7 @@ namespace Pdf2Image
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            var exists = File.Exists(textBoxFilePath.Text);
-            if (!exists)
-            {
-                return;
-            }
-
-            bool existsFolder = Directory.Exists(textBoxOutputFolder.Text);
-            if (!existsFolder)
+            if (ValidFile())
             {
                 return;
             }
@@ -54,14 +47,23 @@ namespace Pdf2Image
             int maxWidth = 0;
 
             var document = new Document(textBoxFilePath.Text);
-            
+            CreatePageImages(longImage, ref totalHeight, ref maxWidth, document);
+
+            if (longImage)
+            {
+                CreateLongImage(totalHeight, maxWidth, document);
+            }
+        }
+
+        private void CreatePageImages(bool longImage, ref int totalHeight, ref int maxWidth, Document document)
+        {
             foreach (var page in document.Pages)
             {
-                var tempPath = $"{textBoxOutputFolder.Text}\\page{page.Number}_temp" + ".Png";
+                var tempPath = $"{textBoxOutputFolder.Text}\\page{page.Number}_temp" + ".png";
                 using var imageStream = new FileStream(tempPath, FileMode.Create);
                 // Create Resolution object
                 var resolution = new Resolution(300);
-                // Create PNG device with specified attributes (Width, Height, Resolution)
+                // Create png device with specified attributes (Width, Height, Resolution)
                 var pngDevice = new PngDevice(resolution);
 
                 // Convert a particular page and save the image to stream
@@ -75,7 +77,7 @@ namespace Pdf2Image
                     maxWidth = Math.Max(maxWidth, bitmap.Width);
                 }
 
-                var filename = $"{textBoxOutputFolder.Text}\\page{page.Number}" + ".Png";
+                var filename = $"{textBoxOutputFolder.Text}\\page{page.Number}" + ".png";
                 bitmap.Save(filename, ImageFormat.Png);
 
                 // Close stream
@@ -83,25 +85,44 @@ namespace Pdf2Image
 
                 File.Delete(tempPath);
             }
+        }
 
-            if (longImage)
+        private void CreateLongImage(int totalHeight, int maxWidth, Document document)
+        {
+            using var bitmapLong = new Bitmap(maxWidth, totalHeight);
+            var graphics = Graphics.FromImage(bitmapLong);
+            graphics.FillRectangle(Brushes.White, new System.Drawing.Rectangle(0, 0, maxWidth, totalHeight));
+            var currentHeight = 0;
+            foreach (var page in document.Pages)
             {
-                using var bitmapLong = new Bitmap(maxWidth, totalHeight);
-                var graphics = Graphics.FromImage(bitmapLong);
-                graphics.FillRectangle(Brushes.White, new System.Drawing.Rectangle(0,0,maxWidth, totalHeight));
-                int currentHeight = 0;
-                foreach (var page in document.Pages)
-                {
-                    var filename = $"{textBoxOutputFolder.Text}\\page{page.Number}" + ".Png";
-                    using var bitmap = new Bitmap(filename);
-                    graphics.DrawImage(bitmap, new System.Drawing.Point(0, currentHeight));
-                    currentHeight += bitmap.Height;
-                }
-
-                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(textBoxFilePath.Text);
-                var filenameLongImage = $"{textBoxOutputFolder.Text}\\{fileNameWithoutExtension}" + ".Png";
-                bitmapLong.Save(filenameLongImage, ImageFormat.Png);
+                var filename = $"{textBoxOutputFolder.Text}\\page{page.Number}" + ".png";
+                using var bitmap = new Bitmap(filename);
+                graphics.DrawImage(bitmap, 0, currentHeight, bitmap.Width, bitmap.Height);
+                currentHeight += bitmap.Height;
+                bitmap.Dispose();
+                File.Delete(filename);
             }
+
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(textBoxFilePath.Text);
+            var filenameLongImage = $"{textBoxOutputFolder.Text}\\{fileNameWithoutExtension}" + ".png";
+            bitmapLong.Save(filenameLongImage, ImageFormat.Png);
+        }
+
+        private bool ValidFile()
+        {
+            var exists = File.Exists(textBoxFilePath.Text);
+            if (!exists)
+            {
+                return false;
+            }
+
+            bool existsFolder = Directory.Exists(textBoxOutputFolder.Text);
+            if (!existsFolder)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static Bitmap RemoveWatermark(Stream imageStream)
