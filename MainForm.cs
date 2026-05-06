@@ -37,7 +37,7 @@ namespace Pdf2Image
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (ValidFile())
+            if (!ValidFile())
             {
                 return;
             }

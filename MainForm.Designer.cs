@@ -52,9 +52,8 @@
             // 
             textBoxFilePath.Location = new Point(110, 12);
             textBoxFilePath.Name = "textBoxFilePath";
-            textBoxFilePath.Size = new Size(581, 23);
+            textBoxFilePath.Size = new Size(581, 25);
             textBoxFilePath.TabIndex = 1;
-            textBoxFilePath.Text = "D:\\YYXGithub\\Pdf2Image\\TestFiles\\2009最后的邪神种子.pdf";
             // 
             // buttonFilePath
             // 
@@ -80,9 +79,8 @@
             // 
             textBoxOutputFolder.Location = new Point(110, 50);
             textBoxOutputFolder.Name = "textBoxOutputFolder";
-            textBoxOutputFolder.Size = new Size(581, 23);
+            textBoxOutputFolder.Size = new Size(581, 25);
             textBoxOutputFolder.TabIndex = 4;
-            textBoxOutputFolder.Text = "D:\\YYXGithub\\Pdf2Image\\TestFiles";
             // 
             // labelOutputFolder
             // 
@@ -96,11 +94,9 @@
             // checkBoxLongImage
             // 
             checkBoxLongImage.AutoSize = true;
-            checkBoxLongImage.Checked = true;
-            checkBoxLongImage.CheckState = CheckState.Checked;
             checkBoxLongImage.Location = new Point(110, 88);
             checkBoxLongImage.Name = "checkBoxLongImage";
-            checkBoxLongImage.Size = new Size(97, 21);
+            checkBoxLongImage.Size = new Size(96, 21);
             checkBoxLongImage.TabIndex = 7;
             checkBoxLongImage.Text = "Long Image";
             checkBoxLongImage.UseVisualStyleBackColor = true;
